@@ -1,6 +1,55 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
+import styled from "styled-components";
+import DatePicker from "react-datepicker";
+import 'react-datepicker/dist/react-datepicker.css';
+
+const FormWrapper = styled.div`
+    background-color: #002244;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    margin: 0 auto;
+    color: #fff;
+`;
+
+const StyledForm = styled.form`
+    display: flex;
+    flex-direction: column;
+`;
+
+const StyledLabel = styled.label`
+    margin-bottom: 10px;
+    font-size: 18px;
+`;
+
+const StyledInput = styled(DatePicker)`
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    width: 100%;
+`;
+
+const SubmitButton = styled.button`
+    padding: 10px;
+    background-color: #1E90FF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    
+    &:hover {
+        background-color: #0B3D91;
+    }
+`;
 
 function TimeRangeForm() {
+    useEffect(() => {
+        document.title = "Расчёт времени";
+    }, [])
+
     const [from, setFrom] = useState("");
     const [to, setTo] = useState("");
     const [timePeriodResponse, setTimePeriodResponse] = useState(null);
@@ -8,7 +57,6 @@ function TimeRangeForm() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Преобразование значений дат в формат ISO
         const timeRangeRequest = {
             from: new Date(from),
             to: new Date(to),
@@ -35,44 +83,40 @@ function TimeRangeForm() {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
+        <FormWrapper>
+            <StyledForm onSubmit={handleSubmit}>
                 <div>
-                    <label>
-                        From:
-                        <input
-                            type="datetime-local"
-                            value={from}
-                            onChange={(e) => setFrom(e.target.value)}
-                            required
-                        />
-                    </label>
+                    <StyledLabel>От: </StyledLabel>
+                    <StyledInput
+                        selected={from}
+                        onChange={(date) => setFrom(date)}
+                        showTimeSelect
+                        dateFormat="Pp"
+                    />
                 </div>
                 <div>
-                    <label>
-                        To:
-                        <input
-                            type="datetime-local"
-                            value={to}
-                            onChange={(e) => setTo(e.target.value)}
-                            required
-                        />
-                    </label>
+                    <StyledLabel>До: </StyledLabel>
+                    <StyledInput
+                        selected={to}
+                        onChange={(date) => setTo(date)}
+                        showTimeSelect
+                        dateFormat="Pp"
+                    />
                 </div>
-                <button type="submit">Submit</button>
-            </form>
+                <SubmitButton type="submit">Принять</SubmitButton>
+            </StyledForm>
 
             {timePeriodResponse && (
                 <div>
                     <h2>Результат:</h2>
-                    <p>Years: {timePeriodResponse.years}</p>
-                    <p>Months: {timePeriodResponse.months}</p>
-                    <p>Days: {timePeriodResponse.days}</p>
-                    <p>Hours: {timePeriodResponse.hours}</p>
-                    <p>Minutes: {timePeriodResponse.minutes}</p>
+                    <p>Лет: {timePeriodResponse.years}</p>
+                    <p>Месяцев: {timePeriodResponse.months}</p>
+                    <p>Дней: {timePeriodResponse.days}</p>
+                    <p>Часов: {timePeriodResponse.hours}</p>
+                    <p>Минут: {timePeriodResponse.minutes}</p>
                 </div>
             )}
-        </div>
+        </FormWrapper>
     );
 }
 
